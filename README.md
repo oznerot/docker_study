@@ -10,6 +10,6 @@ O frontend faz requisições para a API e a API pega os dados do mongodb.
 A API então repassa os dados para o frontend.  
 
 ## Como rodar
-$ git clone https://github.com/oznerot/docker_study.git
-$ cd docker_study
+$ git clone https://github.com/oznerot/docker_study.git  
+$ cd docker_study  
 $ docker compose up --build
