@@ -1,0 +1,52 @@
+<div class="student-container">
+  <h2>Student CRUD</h2>
+
+  <form (ngSubmit)="selectedStudent ? updateStudent() : createStudent()">
+    <input
+      type="text"
+      placeholder="Name"
+      [(ngModel)]="studentForm.name"
+      name="name"
+      required
+    />
+    <input
+      type="number"
+      placeholder="Age"
+      [(ngModel)]="studentForm.age"
+      name="age"
+      required
+    />
+    <button type="submit">{{ selectedStudent ? 'Update' : 'Add' }} Student</button>
+    <button type="button" (click)="cancelEdit()">Clear</button>
+  </form>
+
+  <div *ngIf="students.length > 0; else noStudents">
+    <h3>Students List</h3>
+    <table border="1" cellpadding="8" cellspacing="0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students">
+          <td>{{ student.id }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ student.age }}</td>
+          <td>
+            <button (click)="selectStudent(student)">Edit</button>
+            <button (click)="deleteStudent(student.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noStudents>
+    <p>No students found.</p>
+  </ng-template>
+
+</div>

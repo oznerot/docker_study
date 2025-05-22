@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:8.0.9
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    
+    volumes:
+      - mongo-data:/data/db
+  
+  api:
+    build: ./backend
+    image: my-student-api:latest
+    environment:
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+      USERNAME: root
+      PASSWORD: root
+      CORS_ORIGINS: "http://localhost:4200,http://frontend:4200,http://frontend:80"
+    
+    depends_on:
+      - mongodb
+  
+  frontend:
+    build: ./frontend
+    image: my-student-crud:latest
+    restart: always
+    ports:
+      - '4200:80'
+
+    depends_on:
+     - api
+
+volumes:
+  mongo-data:
