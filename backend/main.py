@@ -40,7 +40,7 @@ class Student(BaseModel):
 async def ping():
     return 'The server is up'
 
-@app.post("/student/")
+@app.post("/student")
 async def create_student(new_student: Student):
     print('Create student request')   
     result = collection.insert_one(new_student.dict())
