@@ -12,14 +12,17 @@ import os
 import argparse
 
 
-MONGODB_PORT = os.getenv('MONGODB_PORT', '27017')
-MONGODB_HOST = os.getenv('MONGODB_HOST', 'localhost')
-PASSWORD = os.getenv('PASSWORD', 'root')
-USERNAME = os.getenv('USERNAME', 'root')
-MONGODB_ADDRESS = f"mongodb://{USERNAME}:{PASSWORD}@{MONGODB_HOST}:{MONGODB_PORT}/"
+MONGO_PORT = os.getenv('MONGO_PORT', '27017')
+MONGO_HOST = os.getenv('MONGO_HOST', 'localhost')
+MONGO_PASSWORD = os.getenv('MONGO_INITDB_ROOT_PASSWORD', 'root')
+MONGO_USER = os.getenv('MONGO_INITDB_ROOT_USERNAME', 'root')
+MONGODB_ADDRESS = f"mongodb://{MONGO_USER}:{MONGO_PASSWORD}@{MONGO_HOST}:{MONGO_PORT}/"
 ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:4200').split(',')
+FASTAPI_ROOT_PATH = os.getenv('FASTAPI_ROOT_PATH', '')
 
-app = FastAPI()
+print('FAST API ROOT PATH: ', FASTAPI_ROOT_PATH)
+
+app = FastAPI(root_path=FASTAPI_ROOT_PATH)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ORIGINS,
@@ -36,24 +39,15 @@ class Student(BaseModel):
     name: str
     age: int
 
-@app.get("/")
+@app.get("/health")
 async def ping():
-    return 'The server is up'
+    return {'status': 'success'}
 
 @app.post("/student")
 async def create_student(new_student: Student):
     print('Create student request')   
     result = collection.insert_one(new_student.dict())
     return {"student": {**new_student.dict(), 'id': str(result.inserted_id)}}
-
-'''
-@app.post("/students")
-async def create_students(new_students: List[Student]):
-    result = collection.insert_one()
-    # Insert students into the collection
-    result = collection.insert_many([student.dict() for student in new_students])
-    return {"inserted_ids": [str(_id) for _id in result.inserted_ids]}
-'''
 
 @app.get("/student/{id}")
 async def read_student(id: str):
@@ -96,8 +90,6 @@ def argparser():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-e', '--env', default='dev')
-    parser.add_argument('-p', '--password', default='root')
-    parser.add_argument('-u', '--username', default='root')
 
     return parser.parse_args()
 
@@ -105,4 +97,4 @@ if __name__ == '__main__':
     args = argparser()
     env = args.env    
 
-    uvicorn.run('main:app', host="0.0.0.0", port=21950, reload=True)
+    uvicorn.run('main:app', host="0.0.0.0", port=8000, reload=True)
