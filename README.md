@@ -7,7 +7,7 @@ Este projeto consiste em um CRUD completo utilizando:
 - **Kubernetes** para orquestração
 - **Helm** para gerenciamento dos manifestos
 
-## 📦 Estrutura dos Diretórios
+## Estrutura dos Diretórios
 
 ```
 student-app/
