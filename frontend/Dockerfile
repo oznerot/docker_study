@@ -12,7 +12,8 @@ RUN npm run build --prod
 FROM nginx:alpine
 
 COPY --from=build /app/dist/crud-student/browser /usr/share/nginx/html
-COPY ./crud-student/nginx.conf /etc/nginx/conf.d/default.conf
+ARG ENVIRONMENT=compose
+COPY ./crud-student/nginx.$ENVIRONMENT.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80   
 
